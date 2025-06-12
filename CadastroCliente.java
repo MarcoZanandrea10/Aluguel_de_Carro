@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
+import java.io.File;
 
 public class CadastroCliente  {
 
@@ -53,12 +54,23 @@ public class CadastroCliente  {
         cliente.setNumeroCNH(sc.nextInt());
         
         System.out.println(cliente);    // inf do cliente na tela
-        
+
+        // Garante que o arquivo existe antes de escrever
+        File arquivo = new File("usuarios.txt");
+        try {
+            if (!arquivo.exists()) {
+                arquivo.createNewFile();
+            }
+        } catch (Exception e) {
+            System.out.println("\nErro ao criar arquivo de usuários: " + e.getMessage());
+            return;
+        }
+
         try (java.io.FileWriter fw = new java.io.FileWriter("usuarios.txt", true)) {     // escreve no arquivo
             fw.write(cliente.getNome() + ";" + cliente.getCpf() + ";" + cliente.getIdade().format(formatoData) + ";" + cliente.getNumeroCNH() + ";" + cliente.isHabilitado() + "\n");     // salva os dados do usuário no arquivo usuarios.txt
             System.out.println("\nUsuário cadastrado com sucesso!");
         } catch (Exception e) {
-            System.out.println("Erro ao salvar usuário: " + e.getMessage());    // caso ocorra erro
+            System.out.println("\nErro ao salvar usuário: " + e.getMessage());    // caso ocorra erro
         }
 
     }
@@ -73,7 +85,7 @@ public class CadastroCliente  {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Erro ao verificar CPF: " + e.getMessage());     // caso ocorra erro
+            System.out.println("\nErro ao verificar CPF: " + e.getMessage());     // caso ocorra erro
         }
         return false;
     }
