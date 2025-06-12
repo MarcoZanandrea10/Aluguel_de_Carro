@@ -1,9 +1,11 @@
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class AdicionarVeiculo {
 
-    public static void adicionarVeiculo() {
+    public static void adicionarVeiculo() throws IOException {
 
         Scanner sc = new Scanner(System.in);
         Veiculo veiculo = new Veiculo(null, null, null, null, 0, true); // Cria um novo objeto Veiculo
@@ -64,12 +66,19 @@ public class AdicionarVeiculo {
             veiculo.setAno(sc.nextInt());
             veiculo.setDisponivel(true);
 
-            try (FileWriter fw = new FileWriter("veiculos.txt", true)) {     // abre o arquivo veiculos.txt
-                fw.write(veiculo.getPlaca() + ";" + veiculo.getModelo() + ";" + veiculo.getMarca() + ";" + veiculo.getCor() + ";" + veiculo.getAno() + ";" + veiculo.getDisponivel() + ";" + tipoVeiculo + "\n" );     // salva os dados do veículo no arquivo veiculos.txt
+            // antes do try(FileWriter...)
+            File arquivo = new File("veiculos.txt");
+            if (!arquivo.exists()) {
+                arquivo.createNewFile();
+            }
+
+            try (FileWriter fw = new FileWriter("veiculos.txt", true)) { // já cria se não existir
+                fw.write(veiculo.getPlaca() + ";" + veiculo.getModelo() + ";" + veiculo.getMarca() + ";" + veiculo.getCor() + ";" + veiculo.getAno() + ";" + veiculo.getDisponivel() + ";" + tipoVeiculo + "\n" );
                 System.out.println("\nVeículo adicionado com sucesso!");
             } catch (Exception e) {
-                System.out.println("Erro ao salvar veículo: " + e.getMessage());    // caso ocorra erro
+                System.out.println("\nErro ao salvar veículo: " + e.getMessage());
             }
+
 
         }
     }
